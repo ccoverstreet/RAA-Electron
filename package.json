@@ -1,0 +1,23 @@
+{
+	"name": "raa_electron",
+	"version": "1.0.0",
+	"description": "this is the gui program for the mission control briefcase",
+	"main": "main.js",
+	"author": "Cale Overstreet and RAA",
+	"license": "ISC",
+	"scripts": {
+		"first_install": "npm install && npm run compile",
+		"clean": "node setup_scripts//clean_install.js",
+		"start": "electron .",
+		"compile": "node setup_scripts//compile_cpp.js",
+		"dist": "build",
+		"cli": "executables//raa_trajectory_cli"
+	},
+	"devDependencies": {
+		"electron": "^3.0.13"
+	},
+	"dependencies": {
+		"fs-extra": "^8.1.0",
+		"plotly.js-dist": "^1.46.1"
+	}
+}

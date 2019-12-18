@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>RAA Electron</title>
+		<!-- Example Plotly Use -->
+		<script type="text/javascript" src="gui_functions.js"></script>
+	</head>
+
+	<!-- Top Menu Bar for page selection -->
+	<div class = "menu_bar">
+		<button id="Start_Button" class="tablinks menu_button" style = "grid-column: 1; grid-row: 1;" onclick="switchTab(event, 'Start')">Start</button>
+		<button id="Model_Parameters_Button" class="tablinks menu_button" style = "grid-column: 2; grid-row: 1;" onclick="switchTab(event, 'Model_Parameters')">Model Parameters</button>
+		<button id="Predicted_Trajectory_Button" class="tablinks menu_button" style = "grid-column: 3; grid-row: 1;" onclick="switchTab(event, 'Predicted_Trajectory')">Predicted Trajectory</button>
+		<button id="Help_Button" class="tablinks menu_button" style = "grid-column: 4; grid-row: 1;" onclick="switchTab(event, 'Help')">Help Menu</button>
+		<button class="tablinks menu_button" style = "grid-column: 5; grid-row: 1;"  onclick="location.reload()">Reload</button>
+	</div>
+
+	<!--START PAGE -->
+	<div id="Start" class="tabcontent" style="display: none;">
+		<h3>Test</h3>
+	</div>
+
+	<!-- MODEL PARAMETERS PAGE -->
+	<div id="Model_Parameters" class = "tabcontent model_parameters" style = "display: none;">
+		<!-- Calculation, Launch, and Rocket Parameters -->
+		<div class="calculation_and_launch_parameters" style="grid-row: 1; grid-column: 1;">
+
+			<div class="calculation_parameters_input" style="grid-row: 1; grid-column: 1">
+				<div class="parameters_header_font"  style="grid-row: 1; grid-column: 1 / span 2;">Calculation Settings</div>
+
+				<div class="entry_labels" style = "grid-row: 2; grid-column: 1;">Timestep Size (s):</div>
+				<input type="text" class="entry_input" id="timestep_size_input" value="0.01" style="grid-row: 2; grid-column: 2;"/>
+
+				<div class="entry_labels" style="grid-row: 3; grid-column: 1;">Enable 3D Plotting</div>
+				<input type="checkbox" id="plot3d_enabled" style="grid-row: 3; grid-column: 2; width: 20px; height: 20px; margin-top: 5px;">
+			</div>
+
+			<div class="launch_parameters_input" style="grid-row: 2; grid-column: 1;">
+				<div class="parameters_header_font" style="grid-row: 1; grid-column: 1 / span 2;">Launch Characteristics</div>
+
+				<div class="entry_labels" style = "grid-row: 2; grid-column: 1;">Horizontal Direction (deg):</div>
+				<input type="text" class="entry_input" id="horizontal_direction_input" value="0" style="grid-row: 2; grid-column: 2;"/>
+
+				<div class="entry_labels" style = "grid-row: 3; grid-column: 1;">Vertical Angle (deg):</div>
+				<input type="text" class="entry_input" id="vertical_direction_input" value="85" style="grid-row: 3; grid-column: 2;"/>
+
+				<div class="entry_labels" style = "grid-row: 4; grid-column: 1;">Starting Altitude (m):</div>
+				<input type="text" class="entry_input" id="starting_altitude_input" value="0" style="grid-row: 4; grid-column: 2;"/>
+
+				<div class="entry_labels" style = "grid-row: 5; grid-column: 1;">Launch Rail Length (m):</div>
+				<input type="text" class="entry_input" id="launch_rail_length_input" value="1" style="grid-row: 5; grid-column: 2;"/>
+			</div>
+
+			<div class="rocket_parameters_input" style="grid-row: 3; grid-column: 1">
+				<div class="parameters_header_font" style="grid-row: 1; grid-column: 1 / span 2;">Rocket Characteristics</div>
+
+				<div class="entry_labels" style = "grid-row: 2; grid-column: 1;">Initial Mass (kg):</div>
+				<input type="text" class="entry_input" id="initial_mass_input" value="0.015" style="grid-row: 2; grid-column: 2;"/>
+
+				<div class="entry_labels" style = "grid-row: 3; grid-column: 1;">Rocket Diameter (m):</div>
+				<input type="text" class="entry_input" id="rocket_diameter_input" value="0.02" style="grid-row: 3; grid-column: 2;"/>
+
+				<div class="entry_labels" style = "grid-row: 4; grid-column: 1;">Rocket Drag Coeff:</div>
+				<input type="text" class="entry_input" id="rocket_cd_input" value="0.6" style="grid-row: 4; grid-column: 2;"/>
+
+				<div class="entry_labels" style = "grid-row: 5; grid-column: 1;">Parachute Diameter (m):</div>
+				<input type="text" class="entry_input" id="parachute_diameter_input" value="0.10" style="grid-row: 5; grid-column: 2;"/>
+
+				<div class="entry_labels" style = "grid-row: 6; grid-column: 1;">Parachute Drag Coeff:</div>
+				<input type="text" class="entry_input" id="parachute_cd_input" value="1.42" style="grid-row: 6; grid-column: 2;"/>
+			</div>
+
+		</div>
+
+		<!-- Controls -->
+		<div class="parameter_controls" style="grid-row: 1; grid-column: 3;">
+			<button class = "parameter_button" style = "grid-column: 1; grid-row: 1; border: 1px solid #000000" onclick="Trajectory_Calculator()">Calculate Trajectory</button>
+			<button class = "parameter_button" style = "grid-column: 2; grid-row: 1; border: 1px solid #000000" onclick="Clear_Memory()">Reset</button>
+		</div>
+
+		<!-- Stage Configuration -->
+		<div class="stage_configuration" style="grid-row: 2; grid-column: 3;">
+			<button class="parameter_button" onclick="addStage()" style="border: 1px solid #000000;">Add Stage</button>
+			<button class="parameter_button" onclick="removeStage()" style="border: 1px solid #000000;">Remove Stage</button>
+
+			<!-- Stage Containers -->
+			<div class="stage_container" id="stage_container" style="grid-row: 2; grid-column: 1 / span 2;">
+				<div class="stage_template" id="stage_1">
+					<div class="parameters_header_font" id="stage_name" style="grid-row: 1; grid-column: 1 / span 2;">Stage 1</div>
+
+					<div class="entry_labels" style="grid-row: 2; grid-column: 1;">Impulse (N-s):</div>
+					<input class="stage_template_entries" type="text" id="stage_impulse_input_1" value="1" style="grid-row: 2; grid-column: 2;"/>
+
+					<div class="entry_labels" style="grid-row: 3; grid-column: 1;">Burn Time (s):</div>
+					<input class="stage_template_entries" type="text" id="stage_burn_time_input_1" value="2" style="grid-row: 3; grid-column: 2;"/>
+
+					<div class="entry_labels" style="grid-row: 4; grid-column: 1;">Delay After Stage (s):</div>
+					<input class="stage_template_entries" type="text" id="stage_delay_time_input_1" value="2" style="grid-row: 4; grid-column: 2;"/>
+
+					<div class="entry_labels" style="grid-row: 5; grid-column: 1;">Mass of Stage (kg):</div>
+					<input class="stage_template_entries" type="text" id="stage_total_mass_input_1" value="0.015" style="grid-row: 5; grid-column: 2;"/>
+
+					<div class="entry_labels" style="grid-row: 6; grid-column: 1;">Dry Mass of Stage (kg):</div>
+					<input class="stage_template_entries" type="text" id="stage_dry_mass_input_1" value="0.01" style="grid-row: 6; grid-column: 2; "/>
+
+					<div class="entry_labels" style="grid-row: 7; grid-column: 1;">Does Stage Separate?</div>
+					<input type="checkbox" id="stage_separation_input_1" style="grid-row: 7; grid-column: 2; width: 20px; height: 20px; margin-top: 5px;">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- GRAPHING PAGE -->
+	<div id = "Predicted_Trajectory" class = "tabcontent predicted_trajectory" style = "display: none;">
+		<div class="predicted_trajectory_controls" style="">
+			<button id="Predicted_Data_Output_Button" class="predicted_trajectory_button predicted_trajectory_link" onclick="switchOutput(event, 'Predicted_Data_Output');" style="grid-row: 1; grid-column: 1;">Data Summary</button>
+			<button id="plot_2d_position_Button" class="predicted_trajectory_button predicted_trajectory_link" onclick="switchOutput(event, 'plot_2d_position');" style="grid-row: 2; grid-column: 1;">2D Position</button>
+			<button id="plot_2d_velocity_Button" class="predicted_trajectory_button predicted_trajectory_link" onclick="switchOutput(event, 'plot_2d_velocity');" style="grid-row: 3; grid-column: 1;">2D Velocity</button>
+			<button id="plot_2d_acceleration_Button" class="predicted_trajectory_button predicted_trajectory_link" onclick="switchOutput(event, 'plot_2d_acceleration');" style="grid-row: 4; grid-column: 1;">2D Acceleration</button>
+			<button id="plot_3d_position_Button" class="predicted_trajectory_button predicted_trajectory_link" onclick="switchOutput(event, 'plot_3d_position');" style="grid-row: 5; grid-column: 1;">3D Position</button>
+		</div>
+
+		<div class="predicted_trajectory_content" style="grid-row: 1; grid-column: 1;"> 
+			<div id="Predicted_Data_Output" class="output_content predicted_data_output" style="grid-row: 1; grid-column: 1">
+				<div class="predicted_data_output_left_panel" style="grid-row: 1; grid-column: 1">
+					<div class="parameters_header_font" style="grid-row: 1; grid-column: 1 / span 2;">Payload Values</div>
+
+					<div class="entry_labels" style="grid-row: 2; grid-column: 1;">Total Flight Time (s):</div>
+					<div class="data_output_labels" id="payload_total_flight_time_output" style="grid-row: 2; grid-column: 2"></div>
+
+					<div class="entry_labels" style="grid-row: 3; grid-column: 1;">Apogee (m):</div>
+					<div class="data_output_labels" id="payload_apogee_output" style="grid-row: 3; grid-column: 2"></div>
+
+					<div class="entry_labels" style="grid-row: 4; grid-column: 1;">Time of Apogee (s):</div>
+					<div class="data_output_labels" id="payload_time_of_apogee_output" style="grid-row: 4; grid-column: 2"></div>
+
+					<div class="entry_labels" style="grid-row: 5; grid-column: 1;">Final Position East (m):</div>
+					<div class="data_output_labels" id="payload_final_x_position_output" style="grid-row: 5; grid-column: 2"></div>
+
+					<div class="entry_labels" style="grid-row: 6; grid-column: 1;">Final Position North (m):</div>
+					<div class="data_output_labels" id="payload_final_y_position_output" style="grid-row: 6; grid-column: 2"></div>
+
+					<div class="entry_labels" style="grid-row: 7; grid-column: 1;">Horizontal Distance (m):</div>
+					<div class="data_output_labels" id="payload_horizontal_distance_output" style="grid-row: 7; grid-column: 2"></div>
+
+					<div class="entry_labels" style="grid-row: 8; grid-column: 1;">Landing Velocity (m/s):</div>
+					<div class="data_output_labels" id="payload_landing_velocity_output" style="grid-row: 8; grid-column: 2"></div>
+
+					<div class="entry_labels" style="grid-row: 9; grid-column: 1;">Final Payload Mass (kg):</div>
+					<div class="data_output_labels" id="payload_final_mass_output" style="grid-row: 9; grid-column: 2"></div>
+
+
+				</div>
+			</div>
+
+			<div id="plot_3d_position" class="output_content" style="grid-row: 1; grid-column: 1; display: none;"></div>
+			<div id="plot_2d_position" class="output_content" style="grid-row: 1; grid-column: 1;"></div>
+			<div id="plot_2d_velocity" class="output_content" style="grid-row: 1; grid-column: 1;"></div>
+			<div id="plot_2d_acceleration" class="output_content" style="grid-row: 1; grid-column: 1;"></div>
+		</div> 
+	</div>
+
+	<!-- HELP PAGE -->
+	<div id = "Help" class = "tabcontent help_page" style = "display: none;">
+	</div>
+
+	<!-- Scripts to auto-run -->
+	<script>
+		//OS Detection Script
+		Detect_OS();
+		switchTab(event, 'Model_Parameters');
+		require('v8-compile-cache');
+	</script>
+
+	<link rel="stylesheet" href="formats.css">
+</html>

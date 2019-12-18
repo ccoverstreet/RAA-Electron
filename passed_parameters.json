@@ -1,0 +1,31 @@
+{
+	"timestep_size": 0.01,
+	"horizontal_direction": 0,
+	"vertical_direction": 85,
+	"starting_altitude": 0,
+	"launch_rail_length": 1,
+	"initial_mass": 0.015,
+	"rocket_diameter": 0.02,
+	"rocket_cd": 0.6,
+	"parachute_diameter": 0.1,
+	"parachute_cd": 1.42,
+	"number_of_stages": 1,
+	"stage_impulse": [
+		1
+	],
+	"stage_burn_time": [
+		2
+	],
+	"stage_delay_time": [
+		2
+	],
+	"stage_total_mass": [
+		0.015
+	],
+	"stage_dry_mass": [
+		0.01
+	],
+	"stage_separation": [
+		0
+	]
+}
