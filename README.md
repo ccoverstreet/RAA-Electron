@@ -1,3 +1,5 @@
+# PLEASE DO NOT USE THIS. I am not maintainig this repo and Electron is likely to have critical security flaws by the time this is read
+
 # About RAA Electron
 
 
