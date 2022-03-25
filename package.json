@@ -14,7 +14,7 @@
 		"cli": "executables//raa_trajectory_cli"
 	},
 	"devDependencies": {
-		"electron": "^7.2.4"
+		"electron": "^13.6.6"
 	},
 	"dependencies": {
 		"fs-extra": "^8.1.0",
